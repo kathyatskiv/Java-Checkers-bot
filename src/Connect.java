@@ -14,7 +14,7 @@ public class Connect {
         token = staticdata.token;
 
     }
-    private MoveResponse sendMove(String token, Move move) throws IOException {
+    public MoveResponse sendMove(String token, Move move) throws IOException {
         HttpURLConnection connection = ((HttpURLConnection) new URL(url + "move").openConnection());
         connection.setRequestMethod("POST");
         connection.setRequestProperty("Accept", "application/json");
@@ -108,7 +108,7 @@ class GameInfoResponse{
     }
 
     class Tile{
-        String position;
+        int position;
         String color;
     }
 }
@@ -132,6 +132,6 @@ class Move{
         return "[" +
                 from +
                 ", " + to +
-                ']';
+                "]";
     }
 }
