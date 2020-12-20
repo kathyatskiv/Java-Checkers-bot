@@ -103,13 +103,18 @@ class GameInfoResponse{
         String whose_turn;
         String winner;
         String available_time;
-        String last_move;
+        LastMove last_move;
         Tile[] board;
     }
 
     class Tile{
         int position;
         String color;
+    }
+
+    class LastMove {
+        String player;
+        int[][] moves;
     }
 }
 

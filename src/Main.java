@@ -1,4 +1,5 @@
 import java.io.IOException;
+import java.util.FormatFlagsConversionMismatchException;
 import java.util.concurrent.TimeUnit;
 
 public class Main {
@@ -19,19 +20,13 @@ public class Main {
                 board[i][j] = 0;
     }
 
-    private static void setPosition(String color, int pos){
-        int posi = 0;
-        int posj = 0;
-
+    private static void setPosition(int color, int pos){
         for(int i = 0; i < 8; i++)
             for(int j = 0; j < 8; j++)
                 if(positions[i][j] == pos){
-                    posi = i;
-                    posj = j;
-                    break;
+                    board[i][j] = color;
+                    return;
                 }
-
-        board[posi][posj] = color == "RED" ? 1 : 2;
     }
 
     private static final int[][] positions =
@@ -41,7 +36,7 @@ public class Main {
              {0,16,0,15,0,14,0,13},
              {20,0,19,0,18,0,17,0},
              {0,24,0,23,0,22,0,21},
-             {28,0,27,0,25,0,25,0},
+             {28,0,27,0,26,0,25,0},
              {0,32,0,31,0,30,0,29}};
 
     public static void main(String[] args) throws IOException, InterruptedException {
@@ -50,50 +45,59 @@ public class Main {
         GameInfoResponse.GIData curdata;
         do{
            curdata = connection.getInfo();
+           if(curdata.winner != null) break;
            zeroBoard();
             for(GameInfoResponse.Tile tile : curdata.board){
-                setPosition(tile.color,tile.position);
+                setPosition(tile.color.length() == 3 ? 1 : 2, tile.position);
             }
 
-//            System.out.println("MY COLOR:"+(Connect.color.length()==curdata.whose_turn.length()));
-//            System.out.println("WHOSE TURN:"+curdata.whose_turn);
-//            System.out.println("MY TURN: "+ curdata.whose_turn==Connect.color);
+            for(int i = 0; i < 8; i++){
+                for(int j = 0; j < 7; j++)
+                    System.out.print(board[i][j]);
+                System.out.println(board[i][7]);
+            }
 
-           if(curdata.whose_turn.length() == Connect.color.length())
-               connection.sendMove(Connect.token,makeMove(Connect.color == "RED" ? 1 : 2));
 
-            TimeUnit.SECONDS.sleep(10);
+           if(curdata.whose_turn.length() == Connect.color.length()){
+               Move mv = makeMove(Connect.color.length() == 3 ? 1 : 2);
+               System.out.println("MOVE:" + mv);
+               connection.sendMove(Connect.token,mv);
+           }
+
+
+            TimeUnit.SECONDS.sleep(5);
         } while (curdata.winner == null);
 
     }
 
     private static Move makeMove(int color){
+        System.out.println("COLOR " + color);
         if(color == 1){
             for(int i = 0; i < 8; i++)
                 for(int j = 0; j < 8; j++){
                     if(board[i][j] == 0 || board[i][j] == 2) continue;
 
-                    //check for beat
-                    try
-                    {
-                        if(board[i+1][j+1] == 2 && board[i+2][j+2] == 0)
-                            return new Move(positions[i][j], positions[i+2][j+2]);
-                        if(board[i+1][j-1] == 2 && board[i+2][j-2] == 0)
-                            return new Move(positions[i][j], positions[i+2][j-2]);
-                        if(board[i-1][j+1] == 2 && board[i-2][j+2] == 0)
-                            return new Move(positions[i][j], positions[i-2][j+2]);
-                        if(board[i-1][j-1] == 2 && board[i-2][j-2] == 0)
-                            return new Move(positions[i][j], positions[i-2][j-2]);
-                    } catch (ArrayIndexOutOfBoundsException aioobe){}
+                    System.out.println(i + " " + j + " " + board[i][j]);
 
+                    //check for beat
+                    if(i < 6 && j < 6 && board[i+1][j+1] == 2 && board[i+2][j+2] == 0)
+                        return new Move(positions[i][j], positions[i+2][j+2]);
+                    if(i < 6 && j > 1 && board[i+1][j-1] == 2 && board[i+2][j-2] == 0)
+                        return new Move(positions[i][j], positions[i+2][j-2]);
+
+                }
+            for(int i = 0; i < 8; i++)
+                for(int j = 0; j < 8; j++){
+                    if(board[i][j] == 0 || board[i][j] == 2) continue;
+
+                    System.out.println(i + " " + j + " " + board[i][j]);
 
                     //move
-                    try{
-                        if(board[i+1][j+1] == 0)
-                            return new Move(positions[i][j], positions[i+1][j+1]);
-                        if(board[i+1][j-1] == 0)
-                            return new Move(positions[i][j], positions[i+1][j-1]);
-                    } catch (ArrayIndexOutOfBoundsException aioobe){}
+                    if(i < 7 && j < 7 && board[i+1][j+1] == 0)
+                        return new Move(positions[i][j], positions[i+1][j+1]);
+                    if(i < 7 && j > 0 && board[i+1][j-1] == 0)
+                        return new Move(positions[i][j], positions[i+1][j-1]);
+
                 }
         }
         else {
@@ -101,30 +105,30 @@ public class Main {
                 for(int j = 0; j < 8; j++){
                     if(board[i][j] == 0 || board[i][j] == 1) continue;
 
+                    System.out.println(i + " " + j + " " + positions[i][j]);
                     //check for beat
-                    try
-                    {
-                        if(board[i+1][j+1] == 1 && board[i+2][j+2] == 0)
-                            return new Move(positions[i][j], positions[i+2][j+2]);
-                        if(board[i+1][j-1] == 1 && board[i+2][j-2] == 0)
-                            return new Move(positions[i][j], positions[i+2][j-2]);
-                        if(board[i-1][j+1] == 1 && board[i-2][j+2] == 0)
-                            return new Move(positions[i][j], positions[i-2][j+2]);
-                        if(board[i-1][j-1] == 1 && board[i-2][j-2] == 0)
-                            return new Move(positions[i][j], positions[i-2][j-2]);
-                    } catch (ArrayIndexOutOfBoundsException aioobe){}
+                    if(i > 1 && j < 6 && board[i-1][j+1] == 1 && board[i-2][j+2] == 0)
+                        return new Move(positions[i][j], positions[i-2][j+2]);
+                    if(i > 1 && j > 1 && board[i-1][j-1] == 1 && board[i-2][j-2] == 0)
+                        return new Move(positions[i][j], positions[i-2][j-2]);
 
+                }
+            for(int i = 0; i < 8; i++)
+                for(int j = 0; j < 8; j++){
+                    if(board[i][j] == 0 || board[i][j] == 1) continue;
+
+                    System.out.println(i + " " + j + " " + positions[i][j]);
 
                     //move
-                    try{
-                        if(board[i-1][j+1] == 0)
-                            return new Move(positions[i][j], positions[i+1][j+1]);
-                        if(board[i-1][j-1] == 0)
-                            return new Move(positions[i][j], positions[i+1][j-1]);
-                    } catch (ArrayIndexOutOfBoundsException aioobe){}
+                    if(i > 0 && j < 7 && board[i-1][j+1] == 0)
+                        return new Move(positions[i][j], positions[i-1][j+1]);
+                    if(i > 0 && j > 0 && board[i-1][j-1] == 0)
+                        return new Move(positions[i][j], positions[i-1][j-1]);
+
                 }
+
         }
-        return new Move(1,2);
+        return new Move(9,13);
     }
 
 
