@@ -13,11 +13,15 @@ public class Main {
 
         do{
             curdata = connection.getInfo();
-            if(curdata.status.equals("Game is over")) break;
+            if(curdata.status.equals("Game is over") || curdata.winner != null) break;
 
             if(curdata.whose_turn.equals(Connect.color) && curdata.winner == null){
                 Movement curmv = new Movement(Connect.color, connection);
-                connection.sendMove(Connect.token, curmv.makeMove());
+
+                try {
+                    connection.sendMove(Connect.token, curmv.makeMove());
+                } catch (Exception e) { continue;}
+
             }
             else TimeUnit.SECONDS.sleep(1);
 

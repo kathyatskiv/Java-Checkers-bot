@@ -90,24 +90,12 @@ public class Movement {
         if(color == -1){
             if(move.to < 5) kings.add(move.to);
         }
-        else
-            if (move.to > 28) kings.add(move.to);
+        else if (move.to > 28) kings.add(move.to);
 
-//        if(data.last_move != null)
-//            if((data.last_move.player.equals("RED") && color != RED) || (data.last_move.player.equals("BLACK") & color != BLACK)){
-//                int[][] lm = data.last_move.last_moves;
-//                int from = lm[lm.length-1][0];
-//                int to = lm[lm.length-1][1];
-//
-//                int btw = 0;
-//                if(Math.abs(from - to) == 7) btw = (from > to) ? from - 4 : to - 4;
-//                else if(Math.abs(from - to) == 9) btw = (from > to) ? from - 5 : to - 5;
-//
-//                if (kings.contains(btw)) kings.remove(btw);
-//
-//
-//            }
-
+        if(kings.contains(move.from)){
+            kings.remove(move.from);
+            kings.add(move.to);
+        }
         return move;
     }
 
