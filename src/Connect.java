@@ -36,8 +36,6 @@ public class Connect {
         Reader reader = new InputStreamReader(response, charset);
         MoveResponse result = new Gson().fromJson(reader, MoveResponse.class);
 
-        System.out.println(result.status);
-        System.out.println(result.data);
         return result;
     }
 
@@ -77,7 +75,6 @@ public class Connect {
         System.out.println("Winner: " + result.data.winner);
         System.out.println("Time: " + result.data.available_time);
         try { System.out.println("Last player: " + result.data.last_move); } catch (NullPointerException e){}
-//        try { System.out.println("Last moves: " + result.data.last_move.last_moves); } catch (NullPointerException e){}
         for(GameInfoResponse.Tile tile : result.data.board)
             System.out.println("(Pos: "+tile.position+", Color: "+tile.color+")");
 

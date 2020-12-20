@@ -178,7 +178,6 @@ public class Movement {
         } else if (!safeBefore && safeAfter) {
             m.changeWeight(UNSAFE_SAFE);
         } else if (safeBefore && !safeAfter) {
-            System.out.println("EAT KING " + isKing);
             m.changeWeight(SAFE_UNSAFE * (isKing ? KING_MULTIPLIER : 1));
         } else {
             m.changeWeight(UNSAFE_UNSAFE * (isKing ? KING_MULTIPLIER : 1));

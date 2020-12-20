@@ -7,7 +7,7 @@ public class Main {
     private static final int TIME = 10;
 
     public static void main(String[] args) throws IOException, InterruptedException {
-        Connect connection = new Connect("team2");
+        Connect connection = new Connect("Checky");
 
         GameInfoResponse.GIData curdata;
 
@@ -18,9 +18,7 @@ public class Main {
             if(curdata.whose_turn.equals(Connect.color) && curdata.winner == null){
                 Movement curmv = new Movement(Connect.color, connection);
 
-                try {
-                    connection.sendMove(Connect.token, curmv.makeMove());
-                } catch (Exception e) { continue;}
+                connection.sendMove(Connect.token, curmv.makeMove());
 
             }
             else TimeUnit.SECONDS.sleep(1);
