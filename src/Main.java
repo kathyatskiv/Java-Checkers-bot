@@ -23,7 +23,7 @@ public class Main {
             }
             else TimeUnit.SECONDS.sleep(1);
 
-        } while (!curdata.status.equals("Game is over"));
+        } while (!curdata.status.equals("Game is over") && curdata.winner == null);
 
     }
 
