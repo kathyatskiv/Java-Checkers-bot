@@ -72,13 +72,13 @@ public class Connect {
         Reader reader = new InputStreamReader(response, charset);
         GameInfoResponse result = new Gson().fromJson(reader, GameInfoResponse.class);
 
-		System.out.println(result.data.status);
-		System.out.println("Whose turn: " + result.data.whose_turn);
-		System.out.println("Winner: " + result.data.winner);
-		System.out.println("Time: " + result.data.available_time);
-		System.out.println(result.data.last_move);
-		for(GameInfoResponse.Tile tile : result.data.board)
-			System.out.println("(Pos: "+tile.position+", Color: "+tile.color+")");
+        System.out.println(result.data.status);
+        System.out.println("Whose turn: " + result.data.whose_turn);
+        System.out.println("Winner: " + result.data.winner);
+        System.out.println("Time: " + result.data.available_time);
+//		System.out.println(result.data.last_move);
+//		for(GameInfoResponse.Tile tile : result.data.board)
+//			System.out.println("(Pos: "+tile.position+", Color: "+tile.color+")");
 
         return result.data;
     }
@@ -123,20 +123,3 @@ class MoveResponse{
     String data;
 }
 
-class Move{
-    int from;
-    int to;
-
-    Move(int from, int to){
-        this.from = from;
-        this.to = to;
-    }
-
-    @Override
-    public String toString() {
-        return "[" +
-                from +
-                ", " + to +
-                "]";
-    }
-}
