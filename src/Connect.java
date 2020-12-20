@@ -76,11 +76,10 @@ public class Connect {
         System.out.println("Whose turn: " + result.data.whose_turn);
         System.out.println("Winner: " + result.data.winner);
         System.out.println("Time: " + result.data.available_time);
-        try { System.out.println("Last player: " + result.data.last_move.player); } catch (NullPointerException e){}
-        try { System.out.println("Last moves: " + result.data.last_move.moves); } catch (NullPointerException e){}
-
-//		for(GameInfoResponse.Tile tile : result.data.board)
-//			System.out.println("(Pos: "+tile.position+", Color: "+tile.color+")");
+        try { System.out.println("Last player: " + result.data.last_move); } catch (NullPointerException e){}
+//        try { System.out.println("Last moves: " + result.data.last_move.last_moves); } catch (NullPointerException e){}
+        for(GameInfoResponse.Tile tile : result.data.board)
+            System.out.println("(Pos: "+tile.position+", Color: "+tile.color+")");
 
         return result.data;
     }
@@ -116,7 +115,16 @@ class GameInfoResponse{
 
     class LastMove {
         String player;
-        int[][] moves;
+        int[][] last_moves;
+
+        @Override
+        public String toString() {
+            String str = "";
+            for(int i = 0; i < last_moves.length; i++)
+                str+="\n[" + last_moves[i][0] + ", " + last_moves[i][1] + "]";
+
+            return player + "\nLast moves: " + str;
+        }
     }
 }
 

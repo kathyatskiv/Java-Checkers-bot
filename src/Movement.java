@@ -32,12 +32,12 @@ public class Movement {
     private static final int SKIP_ON_NEXT = 20;
     private static final int KING_ON_NEXT = 40;
     private static final int SAFE_SAFE = 5;
-    private static final int SAFE_UNSAFE = -50;
+    private static final int SAFE_UNSAFE = -40;
     private static final int UNSAFE_SAFE = 40;
     private static final int UNSAFE_UNSAFE = -40;
     private static final int SAFE = 3;
     private static final int UNSAFE = -5;
-    private static final int KING_MULTIPLIER = 2;
+    private static final int KING_MULTIPLIER = 3;
 
     private static final int RED = 1;
     private static final int BLACK = -1;
@@ -68,29 +68,45 @@ public class Movement {
 
     public Move makeMove() throws IOException {
         ArrayList<Move> gm = getMoves();
-        ArrayList<Move> bestmoves = addWeights(gm);
-        int rm = ((int) (Math.random() * bestmoves.size()));
-        Move move = bestmoves.get(rm);
 
+        if(data.last_move != null)
+            if((data.last_move.player.equals("RED") && color == RED) || (data.last_move.player.equals("BLACK") && color == BLACK)){
+                int[][] lm = data.last_move.last_moves;
+                int from = lm[lm.length-1][1];
+
+                for(Move move: gm){
+                    if(move.from != from) gm.remove(move);
+                }
+            }
         System.out.println(gm);
-        System.out.println(bestmoves);
-        System.out.println(move);
 
+        ArrayList<Move> bestmoves = addWeights(gm);
+        System.out.println(bestmoves);
+
+        int rm = ((int) (Math.random() * bestmoves.size())) % bestmoves.size() ;
+        Move move = bestmoves.get(rm);
+        System.out.println("MOVE: " + move);
 
         if(color == -1){
-            if(move.to < 5) {
-                kings.add(move.to);
-                System.out.println(kings);
-            }
+            if(move.to < 5) kings.add(move.to);
         }
-        else{
+        else
             if (move.to > 28) kings.add(move.to);
-        }
 
-        if(kings.contains(move.from)){
-            kings.remove(move.from);
-            kings.add(move.to);
-        }
+//        if(data.last_move != null)
+//            if((data.last_move.player.equals("RED") && color != RED) || (data.last_move.player.equals("BLACK") & color != BLACK)){
+//                int[][] lm = data.last_move.last_moves;
+//                int from = lm[lm.length-1][0];
+//                int to = lm[lm.length-1][1];
+//
+//                int btw = 0;
+//                if(Math.abs(from - to) == 7) btw = (from > to) ? from - 4 : to - 4;
+//                else if(Math.abs(from - to) == 9) btw = (from > to) ? from - 5 : to - 5;
+//
+//                if (kings.contains(btw)) kings.remove(btw);
+//
+//
+//            }
 
         return move;
     }
