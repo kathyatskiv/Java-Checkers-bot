@@ -13,7 +13,7 @@ public class Main {
 
         do{
             curdata = connection.getInfo();
-            if(curdata.status.equals("Game is over") || curdata.winner != null) break;
+            if(curdata.status.equals("Game is over")) break;
 
             if(curdata.whose_turn.equals(Connect.color) && curdata.winner == null){
                 Movement curmv = new Movement(Connect.color, connection);
@@ -25,7 +25,7 @@ public class Main {
             }
             else TimeUnit.SECONDS.sleep(1);
 
-        } while (curdata.winner == null);
+        } while (!curdata.status.equals("Game is over"));
 
     }
 
