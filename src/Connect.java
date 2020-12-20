@@ -76,7 +76,9 @@ public class Connect {
         System.out.println("Whose turn: " + result.data.whose_turn);
         System.out.println("Winner: " + result.data.winner);
         System.out.println("Time: " + result.data.available_time);
-//		System.out.println(result.data.last_move);
+        try { System.out.println("Last player: " + result.data.last_move.player); } catch (NullPointerException e){}
+        try { System.out.println("Last moves: " + result.data.last_move.moves); } catch (NullPointerException e){}
+
 //		for(GameInfoResponse.Tile tile : result.data.board)
 //			System.out.println("(Pos: "+tile.position+", Color: "+tile.color+")");
 

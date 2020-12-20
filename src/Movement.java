@@ -30,14 +30,14 @@ public class Movement {
 
     private static final int SKIP = 25;
     private static final int SKIP_ON_NEXT = 20;
-    private static final int KING_ON_NEXT = 35;
+    private static final int KING_ON_NEXT = 40;
     private static final int SAFE_SAFE = 5;
-    private static final int SAFE_UNSAFE = -40;
+    private static final int SAFE_UNSAFE = -50;
     private static final int UNSAFE_SAFE = 40;
     private static final int UNSAFE_UNSAFE = -40;
     private static final int SAFE = 3;
     private static final int UNSAFE = -5;
-    private static final int KING_MULTIPLIER = 3;
+    private static final int KING_MULTIPLIER = 2;
 
     private static final int RED = 1;
     private static final int BLACK = -1;
@@ -218,7 +218,7 @@ public class Movement {
         if(i+color < 8 && i+color >= 0 && j > 0 && board[i+color][j-1] == -color) return false;
 
         if(kings.contains(positions[i][j])){
-            if(i-color < 8 && i+color >= 0 && j < 7 && board[i-color][j+1] == -color) return false;
+            if(i-color < 8 && i-color >= 0 && j < 7 && board[i-color][j+1] == -color) return false;
             if(i-color < 8 && i-color >= 0 && j > 0 && board[i-color][j-1] == -color) return false;
         }
 
